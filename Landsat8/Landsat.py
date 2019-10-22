@@ -5,6 +5,7 @@ import rasterio as rio
 import rasterio.mask as rmask
 import fiona as fio
 
+# Credit: S.Moliński
 
 def read_landsat_images(folder_name):
     file_list = os.listdir(folder_name)
