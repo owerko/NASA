@@ -3,7 +3,6 @@ from osgeo import gdal
 import matplotlib.pyplot as plt
 
 example_file = 'data/MOD11B3.A2016214.h19v03.006.2016286174218.hdf'
-# example_file = 'data/MOD11B3.A2016214.h19v04.006.2016286174221.hdf'
 
 dataset = gdal.Open(example_file)
 subdatasets = dataset.GetSubDatasets()

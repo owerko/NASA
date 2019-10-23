@@ -2,13 +2,10 @@ import subprocess
 import matplotlib.pyplot as plt
 import numpy as np
 from osgeo import gdal
-# from osgeo import gdalplugins
 
-# test_image = 'raw/MOD11B3.A2000153.h19v03.006.2015160142129.hdf'
 test_image = 'data/MOD11B3.A2016214.h19v03.006.2016286174218.hdf'
-# vector = 'vector/warszawa.shp'
+
 vector = 'vector/czernichow.shp'
-# vector = 'vector/krakow_krakowskie.shp'
 lst_output = 'test2_lst.tiff'
 
 # Read image and process it
@@ -40,5 +37,5 @@ plt.figure(figsize=(10,10))
 imgplot = plt.imshow(celsius_lst_day)
 imgplot.set_cmap('plasma')
 plt.colorbar()
-plt.title('LST daytime for Warsaw')
+plt.title('LST daytime selected Area')
 plt.show()

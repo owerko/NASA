@@ -43,20 +43,7 @@ class ModisRequest:
         return data_type_dict, description_text
 
     def prepare_requests(self, username=None, password=None, input_information=None):
-        """
-        Function prepares input for a request to retrieve MODIS datasets in the hdf format.
-        :param password: password into the MODIS dataset library (LP DAAC),
-        :param username: username into the MODIS dataset library (LP DAAC),
-        :param input_information: input_data about spatial and temporal scale of a dataset in the form of Python list:
-        [variable number (to check numbers invoke DataRequest object with argument data_dict or print
-        DataRequest object),
-        tiles names as a list - (for Germany, Poland, Czechia and Slovakia valid tiles are:
-                                 h18v03, h18v04, h19v03, h19v04)
-        start date in the form: 'YYYY-MM-DD',
-        end date in the form: 'YYYY-MM-DD'
-        output filename without '.hdf' ending]
-        :return: cds api request
-        """
+
         if self.interactive:
             input_information = self._get_input_data()
 
@@ -69,7 +56,7 @@ class ModisRequest:
             password = input('Please, provide your password and press RETURN:\n')
 
         downloading_object = pymodis.downmodis.downModis(destinationFolder=input_information[4],
-                                                         password='password',
+                                                         password='uNVGP_i3paYC3L4RcNMc',
                                                          user='owerko',
                                                          tiles=input_information[1],
                                                          path='MOLT',
