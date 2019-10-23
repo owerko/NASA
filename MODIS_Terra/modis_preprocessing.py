@@ -6,9 +6,10 @@ from osgeo import gdal
 
 # test_image = 'raw/MOD11B3.A2000153.h19v03.006.2015160142129.hdf'
 test_image = 'data/MOD11B3.A2016214.h19v03.006.2016286174218.hdf'
-vector = 'vector/warszawa.shp'
+# vector = 'vector/warszawa.shp'
+vector = 'vector/czernichow.shp'
 # vector = 'vector/krakow_krakowskie.shp'
-lst_output = 'test_lst.tiff'
+lst_output = 'test2_lst.tiff'
 
 # Read image and process it
 
