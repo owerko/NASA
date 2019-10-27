@@ -15,6 +15,10 @@ ax.set_ylabel('Temperature [°C]')
 ax.set_title('Changes temperature and pressure during the observation')
 ax.tick_params('y', colors='r')
 ax.xaxis.set_tick_params(rotation=90)
+every_nth = 4
+for n, label in enumerate(ax.xaxis.get_ticklabels()):
+    if n % every_nth != 0:
+        label.set_visible(False)
 
 ax1 = ax.twinx()
 ax1.plot(fig_9.index[:200:4], fig_9.Atm_pressure[:200:4], linestyle='--', color='b')
@@ -30,6 +34,10 @@ ax2.set_ylabel('Relative Humidity [%]')
 ax2.set_title('Changes relative humidity during the observation and artificial displacement values')
 ax2.tick_params('y', colors='g')
 ax2.xaxis.set_tick_params(rotation=90)
+every_nth = 4
+for n, label in enumerate(ax2.xaxis.get_ticklabels()):
+    if n % every_nth != 0:
+        label.set_visible(False)
 
 ax3 = ax2.twinx()
 ax3.plot(fig_9.index[:200:4], fig_9.Displacement[:200:4], linestyle='--', color='b')
