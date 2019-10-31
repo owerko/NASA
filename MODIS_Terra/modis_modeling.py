@@ -1,35 +1,21 @@
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-
+import matplotlib.pyplot as plt
 from statsmodels.tsa.arima_model import ARIMA
 from statsmodels.tsa.statespace.sarimax import SARIMAX
-from statsmodels.tsa.stattools import adfuller
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
-from scipy.stats import boxcox
-
+from statsmodels.tsa.stattools import adfuller
+from pandas.plotting import register_matplotlib_converters
 sns.set_style("darkgrid")
 
-from pandas.plotting import register_matplotlib_converters
 
 register_matplotlib_converters()
 
 base_temperatures = pd.read_json('json/temperature_modis.json')
 base_temperatures.sort_index(inplace=True)
 temperatures = base_temperatures.copy()
-base_temperatures.head()
-
-plt.figure(figsize=(20, 10))
-ax_lineplot = sns.lineplot(data=base_temperatures['lst_day'])
-plt.show()
-
-plt.figure(figsize=(10, 10))
-plt.subplot(211)
-base_temperatures['lst_day'].hist()
-plt.subplot(212)
-base_temperatures['lst_day'].plot(kind='kde')
-plt.show()
+print(base_temperatures.head())
 
 
 def prepare_data_for_arima(dataset, training_size=0.8):
