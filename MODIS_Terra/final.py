@@ -4,8 +4,9 @@ import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
-plt.style.use('fivethirtyeight')
 
+plt.style.use('default')
+plt.rcParams.update(plt.rcParamsDefault)
 
 base_temperatures = pd.read_json('json/temperature_modis.json')
 base_temperatures.sort_index(inplace=True)
@@ -48,7 +49,6 @@ print('SARIMAX: {} x {}'.format(pdq[2], seasonal_pdq[4]))
 #             print(f'ARIMA{param}x{param_seasonal}12 - AIC:{results.aic}')
 #         except:
 #             continue
-
 
 
 # ARIMA(0, 0, 0)x(0, 0, 0, 12)12 - AIC:3201.8629465976464
@@ -116,7 +116,7 @@ print('SARIMAX: {} x {}'.format(pdq[2], seasonal_pdq[4]))
 # ARIMA(1, 1, 1)x(1, 1, 0, 12)12 - AIC:1094.1198312519903
 # ARIMA(1, 1, 1)x(1, 1, 1, 12)12 - AIC:1034.089873255466
 
-#Najmniejsze AIC
+# Najmniejsze AIC
 # ARIMA(1, 1, 1)x(0, 1, 1, 12)12 - AIC:1032.1450443058748
 
 mod = sm.tsa.statespace.SARIMAX(y,
@@ -135,7 +135,7 @@ plt.show()
 pred = results.get_prediction(start=pd.to_datetime('2017-01-01'), dynamic=False)
 pred_ci = pred.conf_int()
 
-ax = y['2000':].plot(label='observed')
+ax = y['2000':].plot(label='observed', figsize=(20, 12))
 pred.predicted_mean.plot(ax=ax, label='One-step ahead Forecast', alpha=.7)
 
 ax.fill_between(pred_ci.index,
@@ -157,8 +157,11 @@ print('The Mean Squared Error of our forecasts is {}'.format(round(mse, 2)))
 
 pred_dynamic = results.get_prediction(start=pd.to_datetime('2017-01-01'), dynamic=True, full_results=True)
 pred_dynamic_ci = pred_dynamic.conf_int()
+print(pred_dynamic.predicted_mean)
+print(pred_dynamic.conf_int())
+fig, ax = plt.subplots()
 
-ax = y['2000':].plot(label='observed', figsize=(20, 15))
+ax = y['2000':].plot(label='Observed', figsize=(20, 15))
 pred_dynamic.predicted_mean.plot(label='Dynamic Forecast', ax=ax)
 
 ax.fill_between(pred_dynamic_ci.index,
@@ -168,8 +171,19 @@ ax.fill_between(pred_dynamic_ci.index,
 ax.fill_betweenx(ax.get_ylim(), pd.to_datetime('2000-02-01'), y.index[-1],
                  alpha=.1, zorder=-1)
 
-ax.set_xlabel('Date')
-ax.set_ylabel('Temp')
+
+ax.set(xlabel='Date', ylabel='Temp', title='SARIMAX Dynamic')
+# ax.set_axis_bgcolor("white")
+# ax.get_ticklines()
+ax.grid(True)
+
 
 plt.legend()
+fig.tight_layout()
 plt.show()
+
+fig, ax = plt.subplots()
+
+
+
+
