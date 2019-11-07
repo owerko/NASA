@@ -11,7 +11,7 @@ plt.rcParams.update(plt.rcParamsDefault)
 base_temperatures = pd.read_csv('surowe_atmo_r9.csv', sep=';')
 # base_temperatures.sort_index(inplace=True)
 temperatures = base_temperatures.copy()
-y = base_temperatures.loc[::4]['Temperature']
+y = base_temperatures.loc[::4]['Humidity']
 print(y)
 
 y.plot(figsize=(15, 6))
@@ -64,15 +64,15 @@ print('SARIMAX: {} x {}'.format(pdq[2], seasonal_pdq[4]))
 # print('###########')
 # series_list_print_param_aci = pd.Series(list_print_param_aci)
 # print(series_list_print_param_aci)
-# series_list_print_param_aci.to_csv('ibis_fin_param_aci.csv', sep=';')
+# series_list_print_param_aci.to_csv('ibis_fin_param_aci_humi.csv', sep=';')
 
 # IMPORTANT TO READ
 # FULL INFO ABOUT PARAMS and ACI IN CSV FILE
 
 
 # Najmniejsze AIC
-# ARIMA(1, 0, 1)x(0, 1, 1, 24)24 - AIC:1510.5649152103554
-#
+# ARIMA(1, 0, 1)x(0, 1, 1, 24)24 - AIC:2973.7403919996423
+
 mod = sm.tsa.statespace.SARIMAX(y,
                                 order=(1, 0, 1),
                                 seasonal_order=(0, 1, 1, 24),
@@ -122,7 +122,7 @@ ax.fill_between(pred_dynamic_ci.index,
                 pred_dynamic_ci.iloc[:, 0],
                 pred_dynamic_ci.iloc[:, 1], color='k', alpha=.25)
 
-ax.fill_betweenx(ax.get_ylim(), 457, y.index[-1],
+ax.fill_betweenx(ax.get_ylim(), 0, y.index[-1],
                  alpha=.1, zorder=-1)
 
 
