@@ -40,9 +40,9 @@ def add_calc_artificial_displacement_reduced_to_dataframe(list):
     weather_data_plus_a_d_r = weather_data
     return weather_data_plus_a_d_r
 
-def write_dataframe_to_csv(dt):
+def write_dataframe_to_csv(df):
     name_for_file = (input('Write the name for file with extension .csv: '))
-    dt.to_csv(name_for_file, sep=';')
+    df.to_csv(name_for_file, sep=';')
 
 if __name__ == '__main__':
 
