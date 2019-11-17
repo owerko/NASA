@@ -14,8 +14,15 @@ temperatures = base_temperatures.copy()
 y = base_temperatures['lst_day']
 
 print(y)
-
+ax = y.plot(figsize=(20, 12))
 y.plot(figsize=(15, 6))
+# plt.xlabel('')
+# plt.ylabel('')
+ax.set_xlabel('Date', fontsize=14)  # xlabel
+ax.set_ylabel('Temrature [K]', fontsize=14)  # ylabel
+
+plt.title('Czernichow temperatures observe with NASA-MODIS', fontsize=16)
+plt.tight_layout()
 plt.show()
 
 # Define the p, d and q parameters to take any value between 0 and 2
@@ -127,9 +134,22 @@ mod = sm.tsa.statespace.SARIMAX(y,
 
 results = mod.fit()
 
+fcast = results.get_forecast(4)
+print('Forecast:')
+print(fcast.predicted_mean)
+print('Confidence intervals:')
+print(fcast.conf_int())
+# https://github.com/statsmodels/statsmodels/issues/4806
+
 print(results.summary().tables[1])
 
-results.plot_diagnostics(figsize=(15, 12))
+# results.plot_diagnostics(figsize=(15, 12))
+
+results.plot_diagnostics(variable=0, lags=10, fig=None, figsize=(15, 12))
+
+# plt.title('Czernichow temperatures observe with NASA-MODIS', fontsize = 16)
+plt.tight_layout()
+
 plt.show()
 
 pred = results.get_prediction(start=pd.to_datetime('2017-01-01'), dynamic=False)
@@ -137,6 +157,7 @@ pred_ci = pred.conf_int()
 
 ax = y['2000':].plot(label='observed', figsize=(20, 12))
 pred.predicted_mean.plot(ax=ax, label='One-step ahead Forecast', alpha=.7)
+# fcast.predicted_mean.plot(ax=ax, label='One-step ahead Forecast', alpha=.7)
 
 ax.fill_between(pred_ci.index,
                 pred_ci.iloc[:, 0],
@@ -157,8 +178,8 @@ print('The Mean Squared Error of our forecasts is {}'.format(round(mse, 2)))
 
 pred_dynamic = results.get_prediction(start=pd.to_datetime('2017-01-01'), dynamic=True, full_results=True)
 pred_dynamic_ci = pred_dynamic.conf_int()
-print(pred_dynamic.predicted_mean)
-print(pred_dynamic.conf_int())
+# print(pred_dynamic.predicted_mean)
+# print(pred_dynamic.conf_int())
 fig, ax = plt.subplots()
 
 ax = y['2000':].plot(label='Observed', figsize=(20, 15))
@@ -168,22 +189,39 @@ ax.fill_between(pred_dynamic_ci.index,
                 pred_dynamic_ci.iloc[:, 0],
                 pred_dynamic_ci.iloc[:, 1], color='k', alpha=.25)
 
-ax.fill_betweenx(ax.get_ylim(), pd.to_datetime('2000-02-01'), y.index[-1],
+ax.fill_betweenx(ax.get_ylim(), pd.to_datetime('2015-01-01'), y.index[-1],
                  alpha=.1, zorder=-1)
-
 
 ax.set(xlabel='Date', ylabel='Temp', title='SARIMAX Dynamic')
 # ax.set_axis_bgcolor("white")
 # ax.get_ticklines()
 ax.grid(True)
 
-
 plt.legend()
 fig.tight_layout()
 plt.show()
 
+
+
+y_train = y['2000-02-01':'2017-01-01']
+print('y_train:')
+print(y_train)
+
+model = sm.tsa.statespace.SARIMAX(y_train,
+                                  order=(1, 1, 1),
+                                  seasonal_order=(0, 1, 1, 12),
+                                  enforce_stationarity=False,
+                                  enforce_invertibility=False)
+
+res = model.fit()
+
+fcast = res.get_forecast(12)
+print('Forecast:')
+print(fcast.predicted_mean)
+print('Confidence intervals:')
+print(fcast.conf_int())
+
 fig, ax = plt.subplots()
-
-
-
-
+ax.plot(fcast.predicted_mean)
+ax.plot(y_truth['2017-02-01':'2018-01-01'])
+plt.show()

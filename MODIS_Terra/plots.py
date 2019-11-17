@@ -2,15 +2,17 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import statsmodels as sm
 from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from statsmodels.tsa.stattools import adfuller
 from pandas.plotting import register_matplotlib_converters
 
 sns.set_style("darkgrid")
-plt.rcParams.update({'figure.figsize': (9, 7), 'figure.dpi': 120})
-
+# plt.rcParams.update({'figure.figsize': (9, 7), 'figure.dpi': 120})
+plt.rcParams.update({'figure.figsize': (9, 7), 'figure.dpi': 200})
 register_matplotlib_converters()
 
 base_temperatures = pd.read_json('json/temperature_modis.json')
@@ -194,4 +196,7 @@ plt.show()
 #
 # plt.figure(figsize=(12, 5), dpi=300)
 
+# plt.show()
+# decomposition = sm.tsa.seasonal.seasonal_decompose(df, model='additive')
+# fig = decomposition.plot()
 # plt.show()
