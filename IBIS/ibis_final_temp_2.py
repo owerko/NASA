@@ -8,13 +8,25 @@ import matplotlib.pyplot as plt
 plt.style.use('default')
 plt.rcParams.update(plt.rcParamsDefault)
 
-base_temperatures = pd.read_csv('surowe_atmo_r9.csv', sep=';')
-# base_temperatures.sort_index(inplace=True)
+# IMPORTANT !!!!!!!!!!!!!!!
+
+# in file Json add on start data: {"full_h": and close dictionary on end put additional}
+
+base_temperatures = pd.read_json('json/temp_ibis.json')
+base_temperatures.sort_index(inplace=True)
 temperatures = base_temperatures.copy()
-y = base_temperatures.loc[::4]['Temperature']
+y = base_temperatures['full_h']
 print(y)
 
+ax = y.plot(figsize=(20, 12))
 y.plot(figsize=(15, 6))
+# plt.xlabel('')
+# plt.ylabel('')
+ax.set_xlabel('Date', fontsize=14)  # xlabel
+ax.set_ylabel('Temerature [°C]', fontsize=14)  # ylabel
+
+plt.title('Raw temperature data series obtained during IBIS measurement', fontsize=16)
+plt.tight_layout()
 plt.show()
 
 # Define the p, d and q parameters to take any value between 0 and 2
@@ -52,8 +64,8 @@ print('SARIMAX: {} x {}'.format(pdq[2], seasonal_pdq[4]))
 #
 #             results = mod.fit()
 #             list_aci.append(results.aic)
-#             print(f'ARIMA{param}x{param_seasonal}24 - AIC:{results.aic}')
-#             a = (f'ARIMA{param}x{param_seasonal}24 - AIC:{results.aic}')
+#             print(f'SARIMAX{param}x{param_seasonal}24 - AIC:{results.aic}')
+#             a = (f'SARIMAX{param}x{param_seasonal}24 - AIC:{results.aic}')
 #             list_print_param_aci.append(a)
 #         except:
 #             continue
@@ -71,31 +83,19 @@ print('SARIMAX: {} x {}'.format(pdq[2], seasonal_pdq[4]))
 
 
 # Najmniejsze AIC
-# ARIMA(1, 0, 1)x(0, 1, 1, 24)24 - AIC:1510.5649152103554
-
+# SARIMAX(1, 0, 2)x(0, 1, 2, 24)24 - AIC:1383.9744417641518
+#
 mod = sm.tsa.statespace.SARIMAX(y,
-                                order=(1, 0, 1),
-                                seasonal_order=(0, 1, 1, 24),
+                                order=(1, 0, 2),
+                                seasonal_order=(0, 1, 2, 24),
                                 enforce_stationarity=False,
                                 enforce_invertibility=False)
 
 results = mod.fit()
 
-fcast = results.get_forecast(4)
-print('Forecast:')
-print(fcast.predicted_mean)
-print('Confidence intervals:')
-print(fcast.conf_int())
-# https://github.com/statsmodels/statsmodels/issues/4806
-
 print(results.summary().tables[1])
 
-# results.plot_diagnostics(figsize=(15, 12))
-
-results.plot_diagnostics(variable=0, lags=10, fig=None, figsize=(15, 12))
-
-# plt.title('Czernichow temperatures observe with NASA-MODIS', fontsize = 16)
-plt.tight_layout()
+results.plot_diagnostics(figsize=(15, 12))
 plt.show()
 
 pred = results.get_prediction(start=457, dynamic=False)
@@ -103,14 +103,15 @@ pred_ci = pred.conf_int()
 
 ax = y[:].plot(label='observed', figsize=(20, 12))
 pred.predicted_mean.plot(ax=ax, label='One-step ahead Forecast', alpha=.7)
-# fcast.predicted_mean.plot(ax=ax, label='One-step ahead Forecast', alpha=.7)
 
 ax.fill_between(pred_ci.index,
                 pred_ci.iloc[:, 0],
                 pred_ci.iloc[:, 1], color='k', alpha=.2)
 
-ax.set_xlabel('Date')
-ax.set_ylabel('Temp')
+ax.set(xlabel='Date', ylabel='Temerature [°C]', title='SARIMAX Static')
+# ax.set_axis_bgcolor("white")
+# ax.get_ticklines()
+ax.grid(True)
 plt.legend()
 
 plt.show()
@@ -124,8 +125,8 @@ print('The Mean Squared Error of our forecasts is {}'.format(round(mse, 2)))
 
 pred_dynamic = results.get_prediction(start=457, dynamic=True, full_results=True)
 pred_dynamic_ci = pred_dynamic.conf_int()
-# print(pred_dynamic.predicted_mean)
-# print(pred_dynamic.conf_int())
+print(pred_dynamic.predicted_mean)
+print(pred_dynamic.conf_int())
 fig, ax = plt.subplots()
 
 ax = y[:].plot(label='Observed', figsize=(20, 15))
@@ -139,7 +140,7 @@ ax.fill_betweenx(ax.get_ylim(), 0, y.index[-1],
                  alpha=.1, zorder=-1)
 
 
-ax.set(xlabel='Date', ylabel='Temp', title='SARIMAX Dynamic')
+ax.set(xlabel='Date', ylabel='Temerature [°C]', title='SARIMAX Dynamic')
 # ax.set_axis_bgcolor("white")
 # ax.get_ticklines()
 ax.grid(True)
@@ -149,29 +150,8 @@ plt.legend()
 fig.tight_layout()
 plt.show()
 
-
-
-y_train = y[:457]
-print('y_train:')
-print(y_train)
-
-model = sm.tsa.statespace.SARIMAX(y_train,
-                                  order=(1, 0, 1),
-                                  seasonal_order=(0, 1, 1, 24),
-                                  enforce_stationarity=False,
-                                  enforce_invertibility=False)
-
-res = model.fit()
-
-fcast = res.get_forecast(24)
-print('Forecast:')
-print(fcast.predicted_mean)
-print('Confidence intervals:')
-print(fcast.conf_int())
-
 fig, ax = plt.subplots()
-ax.plot(fcast.predicted_mean)
-ax.plot(y_truth[457:481])
-plt.show()
+
+
 
 

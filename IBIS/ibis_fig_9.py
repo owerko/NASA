@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-fig_9 = pd.read_csv('surowe_atmo_r9.csv', sep=';', parse_dates=False, index_col='Time')
+fig_9 = pd.read_csv('surowe_atmo_r9_co_h_nn.csv', sep=';', parse_dates=False, index_col='Time')
 
 print(fig_9.info())
 print()

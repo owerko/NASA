@@ -8,13 +8,25 @@ import matplotlib.pyplot as plt
 plt.style.use('default')
 plt.rcParams.update(plt.rcParamsDefault)
 
-base_temperatures = pd.read_csv('surowe_atmo_r9.csv', sep=';')
-# base_temperatures.sort_index(inplace=True)
+# IMPORTANT !!!!!!!!!!!!!!!
+
+# in file Json add on start data: {"full_h": and close dictionary on end put additional}
+
+base_temperatures = pd.read_json('json/humi_ibis.json')
+base_temperatures.sort_index(inplace=True)
 temperatures = base_temperatures.copy()
-y = base_temperatures.loc[::4]['Humidity']
+y = base_temperatures['full_h']
 print(y)
 
+ax = y.plot(figsize=(20, 12))
 y.plot(figsize=(15, 6))
+# plt.xlabel('')
+# plt.ylabel('')
+ax.set_xlabel('Date', fontsize=14)  # xlabel
+ax.set_ylabel('Relative Humidity [%]', fontsize=14)  # ylabel
+
+plt.title('Relative humidity data series calculated from weather data obtained during IBIS measurement', fontsize=16)
+plt.tight_layout()
 plt.show()
 
 # Define the p, d and q parameters to take any value between 0 and 2
@@ -52,8 +64,8 @@ print('SARIMAX: {} x {}'.format(pdq[2], seasonal_pdq[4]))
 #
 #             results = mod.fit()
 #             list_aci.append(results.aic)
-#             print(f'ARIMA{param}x{param_seasonal}24 - AIC:{results.aic}')
-#             a = (f'ARIMA{param}x{param_seasonal}24 - AIC:{results.aic}')
+#             print(f'SARIMAX{param}x{param_seasonal}24 - AIC:{results.aic}')
+#             a = (f'SARIMAX{param}x{param_seasonal}24 - AIC:{results.aic}')
 #             list_print_param_aci.append(a)
 #         except:
 #             continue
@@ -64,14 +76,14 @@ print('SARIMAX: {} x {}'.format(pdq[2], seasonal_pdq[4]))
 # print('###########')
 # series_list_print_param_aci = pd.Series(list_print_param_aci)
 # print(series_list_print_param_aci)
-# series_list_print_param_aci.to_csv('ibis_fin_param_aci_humi.csv', sep=';')
+# series_list_print_param_aci.to_csv('ibis_fin_param_aci_humi_co_h_u.csv', sep=';')
 
 # IMPORTANT TO READ
 # FULL INFO ABOUT PARAMS and ACI IN CSV FILE
 
 
 # Najmniejsze AIC
-# ARIMA(1, 0, 1)x(0, 1, 1, 24)24 - AIC:2973.7403919996423
+# SARIMAX(1, 0, 1)x(0, 1, 1, 24)24 - AIC:2997.1078096626197
 
 mod = sm.tsa.statespace.SARIMAX(y,
                                 order=(1, 0, 1),
@@ -96,8 +108,10 @@ ax.fill_between(pred_ci.index,
                 pred_ci.iloc[:, 0],
                 pred_ci.iloc[:, 1], color='k', alpha=.2)
 
-ax.set_xlabel('Date')
-ax.set_ylabel('Temp')
+ax.set(xlabel='Date', ylabel='Relative Humidity [%]', title='SARIMAX Static')
+# ax.set_axis_bgcolor("white")
+# ax.get_ticklines()
+ax.grid(True)
 plt.legend()
 
 plt.show()
@@ -126,7 +140,7 @@ ax.fill_betweenx(ax.get_ylim(), 0, y.index[-1],
                  alpha=.1, zorder=-1)
 
 
-ax.set(xlabel='Date', ylabel='Temp', title='SARIMAX Dynamic')
+ax.set(xlabel='Date', ylabel='Relative Humidity [%]', title='SARIMAX Dynamic')
 # ax.set_axis_bgcolor("white")
 # ax.get_ticklines()
 ax.grid(True)
