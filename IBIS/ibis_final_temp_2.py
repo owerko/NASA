@@ -12,7 +12,7 @@ plt.rcParams.update(plt.rcParamsDefault)
 
 # in file Json add on start data: {"full_h": and close dictionary on end put additional}
 
-base_temperatures = pd.read_json('json/press_ibis.json')
+base_temperatures = pd.read_json('json/temp_ibis.json')
 base_temperatures.sort_index(inplace=True)
 temperatures = base_temperatures.copy()
 y = base_temperatures['full_h']
@@ -23,14 +23,14 @@ y.plot(figsize=(15, 6))
 # plt.xlabel('')
 # plt.ylabel('')
 ax.set_xlabel('Date', fontsize=14)  # xlabel
-ax.set_ylabel('Pressure [hPa]', fontsize=14)  # ylabel
+ax.set_ylabel('Temerature [°C]', fontsize=14)  # ylabel
 
-plt.title('Raw pressure data series obtained during IBIS measurement', fontsize=16)
+plt.title('Raw temperature data series obtained during IBIS measurement', fontsize=16)
 plt.tight_layout()
 plt.show()
 
 # Define the p, d and q parameters to take any value between 0 and 2
-p = d = q = range(0, 2)
+p = d = q = range(0, 3)
 
 # Generate all different combinations of p, q and q triplets
 pdq = list(itertools.product(p, d, q))
@@ -76,18 +76,18 @@ print('SARIMAX: {} x {}'.format(pdq[2], seasonal_pdq[4]))
 # print('###########')
 # series_list_print_param_aci = pd.Series(list_print_param_aci)
 # print(series_list_print_param_aci)
-# series_list_print_param_aci.to_csv('ibis_fin_param_aci_press_co_h_u.csv', sep=';')
+# series_list_print_param_aci.to_csv('ibis_fin_param_aci_temp.csv', sep=';')
 
 # IMPORTANT TO READ
 # FULL INFO ABOUT PARAMS and ACI IN CSV FILE
 
 
 # Najmniejsze AIC
-# SARIMAX(1, 1, 0)x(1, 0, 1, 24)24 - AIC:249.18704652109517
-
+# SARIMAX(1, 0, 2)x(0, 1, 2, 24)24 - AIC:1383.9744417641518
+#
 mod = sm.tsa.statespace.SARIMAX(y,
-                                order=(1, 1, 0),
-                                seasonal_order=(1, 0, 1, 24),
+                                order=(1, 0, 2),
+                                seasonal_order=(0, 1, 2, 24),
                                 enforce_stationarity=False,
                                 enforce_invertibility=False)
 
@@ -108,7 +108,7 @@ ax.fill_between(pred_ci.index,
                 pred_ci.iloc[:, 0],
                 pred_ci.iloc[:, 1], color='k', alpha=.2)
 
-ax.set(xlabel='Date', ylabel='Pressure [hPa]', title='SARIMAX Static')
+ax.set(xlabel='Date', ylabel='Temerature [°C]', title='SARIMAX Static')
 # ax.set_axis_bgcolor("white")
 # ax.get_ticklines()
 ax.grid(True)
@@ -140,7 +140,7 @@ ax.fill_betweenx(ax.get_ylim(), 0, y.index[-1],
                  alpha=.1, zorder=-1)
 
 
-ax.set(xlabel='Date', ylabel='Temp', title='SARIMAX Dynamic')
+ax.set(xlabel='Date', ylabel='Temerature [°C]', title='SARIMAX Dynamic')
 # ax.set_axis_bgcolor("white")
 # ax.get_ticklines()
 ax.grid(True)
