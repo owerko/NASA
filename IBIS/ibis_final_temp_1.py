@@ -25,7 +25,7 @@ y.plot(figsize=(15, 6))
 # plt.xlabel('')
 # plt.ylabel('')
 ax.set_xlabel('Date', fontsize=14)  # xlabel
-ax.set_ylabel('Temerature [°C]', fontsize=14)  # ylabel
+ax.set_ylabel('Temperature [°C]', fontsize=14)  # ylabel
 
 plt.title('Raw temperature data series obtained during IBIS measurement', fontsize=16)
 plt.tight_layout()
@@ -118,7 +118,7 @@ ax.fill_between(pred_ci.index,
                 pred_ci.iloc[:, 0],
                 pred_ci.iloc[:, 1], color='k', alpha=.2)
 
-ax.set(xlabel='Date', ylabel='Temerature [°C]', title='SARIMAX Static')
+ax.set(xlabel='Date', ylabel='Temperature [°C]', title='SARIMAX Static')
 # ax.set_axis_bgcolor("white")
 # ax.get_ticklines()
 ax.grid(True)
@@ -152,7 +152,7 @@ ax.fill_between(pred_dynamic_ci.index,
 #                 alpha=.1, zorder=-1)
 
 
-ax.set(xlabel='Date', ylabel='Temerature [°C]', title='SARIMAX Dynamic')
+ax.set(xlabel='Date', ylabel='Temperature [°C]', title='SARIMAX Dynamic')
 # ax.set_axis_bgcolor("white")
 # ax.get_ticklines()
 ax.grid(True)
