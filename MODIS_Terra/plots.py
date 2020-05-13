@@ -193,7 +193,6 @@ plt.show()
 # upper_series = pd.Series(conf[:, 1], index=lst_day_validation.index)
 
 
-#
 # plt.figure(figsize=(12, 5), dpi=300)
 
 # plt.show()

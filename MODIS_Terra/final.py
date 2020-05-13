@@ -19,7 +19,7 @@ y.plot(figsize=(15, 6))
 # plt.xlabel('')
 # plt.ylabel('')
 ax.set_xlabel('Date', fontsize=14)  # xlabel
-ax.set_ylabel('Temrature [K]', fontsize=14)  # ylabel
+ax.set_ylabel('Temperature [K]', fontsize=14)  # ylabel
 
 plt.title('Czernichow temperatures observe with NASA-MODIS', fontsize=16)
 plt.tight_layout()
@@ -144,8 +144,8 @@ print(fcast.conf_int())
 print(results.summary().tables[1])
 
 # results.plot_diagnostics(figsize=(15, 12))
-
-results.plot_diagnostics(variable=0, lags=10, fig=None, figsize=(15, 12))
+fig = plt.figure(figsize=(15, 12), dpi=300)
+fig = results.plot_diagnostics(variable=0, lags=10)
 
 # plt.title('Czernichow temperatures observe with NASA-MODIS', fontsize = 16)
 plt.tight_layout()
@@ -159,12 +159,17 @@ ax = y['2000':].plot(label='observed', figsize=(20, 12))
 pred.predicted_mean.plot(ax=ax, label='One-step ahead Forecast', alpha=.7)
 # fcast.predicted_mean.plot(ax=ax, label='One-step ahead Forecast', alpha=.7)
 
+ax.set_xlabel('Date', fontsize=14)  # xlabel
+ax.set_ylabel('Temperature [K]', fontsize=14)  # ylabel
+
+plt.title('One-step ahead Forecast', fontsize=16)
+
 ax.fill_between(pred_ci.index,
                 pred_ci.iloc[:, 0],
                 pred_ci.iloc[:, 1], color='k', alpha=.2)
 
 ax.set_xlabel('Date')
-ax.set_ylabel('Temp')
+ax.set_ylabel('Temperature [K]')
 plt.legend()
 
 plt.show()
@@ -204,8 +209,7 @@ plt.show()
 
 
 y_train = y['2000-02-01':'2017-01-01']
-print('y_train:')
-print(y_train)
+
 
 model = sm.tsa.statespace.SARIMAX(y_train,
                                   order=(1, 1, 1),
@@ -220,6 +224,8 @@ print('Forecast:')
 print(fcast.predicted_mean)
 print('Confidence intervals:')
 print(fcast.conf_int())
+print(f'y_train o dlugosci {len(y_train)}:')
+# print(y_train.lst_day)
 
 fig, ax = plt.subplots()
 ax.plot(fcast.predicted_mean)
