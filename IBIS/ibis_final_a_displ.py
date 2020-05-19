@@ -18,7 +18,7 @@ temperatures = base_temperatures.copy()
 y = base_temperatures['full_h']
 print(y)
 
-fig, ax = plt.subplots()
+# fig, ax = plt.subplots()
 
 ax = y.plot(figsize=(20, 12))
 y.plot(figsize=(15, 6))
@@ -30,7 +30,7 @@ ax.set_ylabel('Artificial Displacement [mm]', fontsize=14)  # ylabel
 plt.title('Artificial displacement data series calculated from weather data obtained during IBIS measurement', fontsize=16)
 plt.tight_layout()
 
-fig.savefig('fig1_d.eps', format='eps', dpi=600)
+# fig.savefig('fig1_d.eps', format='eps', dpi=600)
 
 plt.show()
 
@@ -100,31 +100,36 @@ results = mod.fit()
 
 print(results.summary().tables[1])
 
-fig, ax = plt.subplots()
 # results.plot_diagnostics(figsize=(15, 12))
-ax = results.plot_diagnostics(figsize=(15, 12))
-ax.savefig('fig2_d.eps', format='eps', dpi=600)
+fig = results.plot_diagnostics(variable=0, lags=10)
+# ax.savefig('fig2_d.eps', format='eps', dpi=600)
+plt.tight_layout()
+
 plt.show()
 
 pred = results.get_prediction(start=457, dynamic=False)
 pred_ci = pred.conf_int()
 
-fig, ax = plt.subplots()
+# fig, ax = plt.subplots()
 
-ax = y[:].plot(label='observed', figsize=(20, 12))
+ax = y[:].plot(label='observed', figsize=(15, 6))
 pred.predicted_mean.plot(ax=ax, label='One-step ahead Forecast', alpha=.7)
+
+ax.set_xlabel('Date', fontsize=14)  # xlabel
+ax.set_ylabel('Artificial Displacement [mm]', fontsize=14)  # ylabel
+
+plt.title('One-step ahead Forecast', fontsize=16)
 
 ax.fill_between(pred_ci.index,
                 pred_ci.iloc[:, 0],
                 pred_ci.iloc[:, 1], color='k', alpha=.2)
 
-ax.set(xlabel='Date', ylabel='Artificial Displacement [mm]', title='SARIMAX Static')
 # ax.set_axis_bgcolor("white")
 # ax.get_ticklines()
-ax.grid(True)
+# ax.grid(True)
 plt.legend()
 
-fig.savefig('fig3_d.eps', format='eps', dpi=600)
+# fig.savefig('fig3_d.eps', format='eps', dpi=600)
 plt.show()
 
 y_forecasted = pred.predicted_mean
@@ -139,31 +144,30 @@ pred_dynamic_ci = pred_dynamic.conf_int()
 print(pred_dynamic.predicted_mean)
 print(pred_dynamic.conf_int())
 
-fig, ax = plt.subplots()
+# fig, ax = plt.subplots()
 
-ax = y[:].plot(label='Observed', figsize=(20, 15))
+ax = y[:].plot(label='Observed', figsize=(15, 6))
 pred_dynamic.predicted_mean.plot(label='Dynamic Forecast', ax=ax)
+
+ax.set_xlabel('Date', fontsize=14)  # xlabel
+ax.set_ylabel('Artificial Displacement [mm]', fontsize=14)  # ylabel
+
+plt.title('Dynamic Forecast', fontsize=16)
 
 ax.fill_between(pred_dynamic_ci.index,
                 pred_dynamic_ci.iloc[:, 0],
                 pred_dynamic_ci.iloc[:, 1], color='k', alpha=.25)
 
-# ax.fill_betweenx(ax.get_ylim(), 0, y.index[-1],
-#                 alpha=.1, zorder=-1)
-
-
-ax.set(xlabel='Date', ylabel='Artificial Displacement [mm]', title='SARIMAX Dynamic')
 # ax.set_axis_bgcolor("white")
 # ax.get_ticklines()
-ax.grid(True)
+# ax.grid(True)
 
 
 
 plt.legend()
-fig.tight_layout()
 
 
-fig.savefig('fig4_d.eps', format='eps', dpi=600)
+# fig.savefig('fig4_d.eps', format='eps', dpi=600)
 
 plt.show()
 
