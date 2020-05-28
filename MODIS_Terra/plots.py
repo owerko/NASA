@@ -12,7 +12,7 @@ from pandas.plotting import register_matplotlib_converters
 
 sns.set_style("darkgrid")
 # plt.rcParams.update({'figure.figsize': (9, 7), 'figure.dpi': 120})
-plt.rcParams.update({'figure.figsize': (9, 7), 'figure.dpi': 200})
+plt.rcParams.update({'figure.figsize': (24, 20), 'figure.dpi': 150})
 register_matplotlib_converters()
 
 base_temperatures = pd.read_json('json/temperature_modis.json')
@@ -24,14 +24,16 @@ datalst = list(dataDD.values())
 df = pd.DataFrame(datalst)
 # print(df)
 
-plt.figure(figsize=(10, 10))
-plt.subplot(211)
-# datalst.hist()
-base_temperatures['lst_day'].hist()
-plt.subplot(212)
-# datalst.plot(kind='kde')
-base_temperatures['lst_day'].plot(kind='kde')
-plt.show()
+# plt.figure(figsize=(10, 10))
+# plt.subplot(211)
+# # datalst.hist()
+# base_temperatures['lst_day'].hist()
+# plt.subplot(212)
+# # datalst.plot(kind='kde')
+# base_temperatures['lst_day'].plot(kind='kde')
+# plt.show()
+
+plt.figure()
 
 # Original Series
 fig, axes = plt.subplots(3, 2, sharex=False)

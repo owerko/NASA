@@ -6,16 +6,16 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 
 plt.style.use('default')
-plt.rcParams.update(plt.rcParamsDefault)
-
+# plt.rcParams.update(plt.rcParamsDefault)
+plt.rcParams.update({'figure.figsize': (24, 12), 'figure.dpi': 150})
 base_temperatures = pd.read_json('json/temperature_modis.json')
 base_temperatures.sort_index(inplace=True)
 temperatures = base_temperatures.copy()
 y = base_temperatures['lst_day']
 
 print(y)
-ax = y.plot(figsize=(20, 12))
-y.plot(figsize=(15, 6))
+ax = y.plot()
+y.plot()
 # plt.xlabel('')
 # plt.ylabel('')
 ax.set_xlabel('Date', fontsize=14)  # xlabel
