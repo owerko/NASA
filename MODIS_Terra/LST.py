@@ -16,13 +16,13 @@ celsius_lst_day[celsius_lst_day < 0] = np.nan
 
 # plt.rcParams.update({'figure.figsize': (20, 20), 'figure.dpi': 300})
 
-plt.figure(figsize=(15, 12), dpi=150)
+plt.figure(figsize=(15, 12), dpi=300)
 # plt.figure(figsize=(10, 20), dpi=150)
 imgplot = plt.imshow(celsius_lst_day)
 imgplot.set_cmap('plasma')
 plt.colorbar(label='Temperature in Celsius')
 plt.title('Land Surface Temperature Daytime')
-plt.ylabel('MODIS Grid Horizontal number')
-plt.xlabel('MODIS Grid Vertical number')
+plt.ylabel('MODIS Grid Vertical number')
+plt.xlabel('MODIS Grid Horizontal number')
 
 plt.show()
