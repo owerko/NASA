@@ -5,7 +5,9 @@ import rasterio as rio
 import rasterio.mask as rmask
 import fiona as fio
 
+
 # Credit: S.Moliński
+
 
 def read_landsat_images(folder_name):
     file_list = os.listdir(folder_name)
@@ -33,7 +35,7 @@ def show_band(band, color_map='gray'):
     plt.show()
 
 
-def show_band2(band, color_map='gray', remove_negative=True):
+def show_band2(band, color_map='gray', remove_negative=True, title=''):
     matrix = band.astype(float)
     if remove_negative:
         matrix[matrix <= 0] = np.nan
@@ -41,9 +43,8 @@ def show_band2(band, color_map='gray', remove_negative=True):
     image_layer = plt.imshow(matrix)
     image_layer.set_cmap(color_map)
     plt.colorbar()
+    plt.title(title)
     plt.show()
-
-
 
 
 # Test
@@ -74,6 +75,7 @@ def clip_area(vector_file, raster_file, save_image_to):
                      "transform": transform})
     with rio.open(save_image_to, "w", **metadata) as g_tiff:
         g_tiff.write(clipped_image)
+
 
 bands = read_landsat_images('LC08/')
 
@@ -107,9 +109,9 @@ def calculate_index(index_name, landsat_8_bands):
         bands = indexes[index_name]
 
         with rio.open(landsat_8_bands[bands[0]]) as a:
-            band_a = (a.read()[0] / 10000).astype(np.float)
+            band_a = (a.read()[0] / 10000).astype(float)
         with rio.open(landsat_8_bands[bands[1]]) as b:
-            band_b = (b.read()[0] / 10000).astype(np.float)
+            band_b = (b.read()[0] / 10000).astype(float)
 
         numerator = band_a - band_b
         denominator = band_a + band_b
@@ -121,18 +123,17 @@ def calculate_index(index_name, landsat_8_bands):
     else:
         raise ValueError('Brak wskaźnika do wyboru, dostępne wskaźniki to ndbi, ndvi i ndwi')
 
+
 ndvi = calculate_index('ndvi', clipped_bands)
 ndvi[ndvi == 0] = -1
-show_band2(ndvi, color_map='viridis', remove_negative=True)
+show_band2(ndvi, color_map='viridis', remove_negative=True, title='NDVI')
 
 ndwi = calculate_index('ndwi', clipped_bands)
 ndwi[ndwi == 0] = np.nan
-show_band2(ndwi, color_map='viridis', remove_negative=False)
+show_band2(ndwi, color_map='viridis', remove_negative=False, title='NDWI')
 
 ndbi = calculate_index('ndbi', clipped_bands)
 ndbi[ndbi == 0] = np.nan
-show_band2(ndbi, color_map='viridis', remove_negative=False)
+show_band2(ndbi, color_map='viridis', remove_negative=False, title='NDBI')
 
-show_band2(ndbi-ndvi, color_map='viridis', remove_negative=False)
-
-
+show_band2(ndbi - ndvi, color_map='viridis', remove_negative=False, title='NDVI-NDVI')
